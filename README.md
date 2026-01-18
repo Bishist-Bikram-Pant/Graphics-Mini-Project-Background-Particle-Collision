@@ -102,7 +102,7 @@ make
 sudo make install
 
 # Compile
-g++ -o particle_collision main.cpp -lSDL_bgi -lSDL2
+g++ -o particle_collision main.cpp -lSDL2 -lSDL_bgi
 ```
 
 #### On Windows:
