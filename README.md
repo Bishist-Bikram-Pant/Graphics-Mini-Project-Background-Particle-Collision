@@ -102,13 +102,13 @@ make
 sudo make install
 
 # Compile
-g++ -o particle_collision main.cpp -lSDL2 -lSDL_bgi
+g++ -o particle_collision main.cpp -lSDL_bgi -lSDL2
 ```
 
 #### On Windows:
 ```bash
 # Use WinBGIm library with MinGW
-g++ -o particle_collision.exe main.cpp -lgraph -lbgi -lgdi32 -lcomdlg32 -luuid -loleaut32 -lole32
+g++ -o particle_collision.exe main.cpp -lbgi -lgraph -lgdi32 -lcomdlg32 -luuid -loleaut32 -lole32
 ```
 
 ### For Python with Pygame:
