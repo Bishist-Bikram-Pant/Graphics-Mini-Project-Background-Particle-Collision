@@ -2,121 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Particle Accelerator Simulation</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            background: #000;
-            font-family: Arial, sans-serif;
-        }
-
-        #info {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            color: white;
-            background: rgba(0,0,0,0.6);
-            padding: 10px;
-            border-radius: 5px;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Particle Collision Animation</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div id="info">
-    <h3>Particle Accelerator</h3>
-    <p>Velocity increases over time</p>
-</div>
-
-<!-- Three.js CDN -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
-
-<script>
-    // Scene
-    const scene = new THREE.Scene();
-
-    // Camera
-    const camera = new THREE.PerspectiveCamera(
-        75,
-        window.innerWidth / window.innerHeight,
-        0.1,
-        1000
-    );
-    camera.position.z = 30;
-
-    // Renderer
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
-
-    // Light
-    const light = new THREE.PointLight(0xffffff, 1);
-    light.position.set(10, 10, 20);
-    scene.add(light);
-
-    // Accelerator tube
-    const tubeGeometry = new THREE.CylinderGeometry(2, 2, 100, 32);
-    const tubeMaterial = new THREE.MeshStandardMaterial({
-        color: 0x2222ff,
-        transparent: true,
-        opacity: 0.2
-    });
-    const tube = new THREE.Mesh(tubeGeometry, tubeMaterial);
-    tube.rotation.x = Math.PI / 2;
-    scene.add(tube);
-
-    // Particle system
-    const particleGeometry = new THREE.SphereGeometry(0.4, 16, 16);
-    const particleMaterial = new THREE.MeshStandardMaterial({
-        color: 0xff0000,
-        emissive: 0xff0000
-    });
-
-    // Create multiple particles
-    const particles = [];
-    const numParticles = 5;
-    for (let i = 0; i < numParticles; i++) {
-        const particle = new THREE.Mesh(particleGeometry, particleMaterial);
-        particle.position.z = -50 + (i * 20); // Spacing along z-axis
-        particle.position.x = (Math.random() - 0.5) * 6; // Random x position
-        particle.position.y = (Math.random() - 0.5) * 6; // Random y position
-        particle.velocity = 0;
-        scene.add(particle);
-        particles.push(particle);
-    }
-
-    // Acceleration variables
-    const acceleration = 0.002;
-
-    // Animation loop
-    function animate() {
-        requestAnimationFrame(animate);
-
-        // Update all particles
-        particles.forEach((particle) => {
-            particle.velocity += acceleration;
-            particle.position.z += particle.velocity;
-
-            // Reset particle after exit
-            if (particle.position.z > 50) {
-                particle.position.z = -50;
-                particle.velocity = 0;
-            }
-        });
-
-        renderer.render(scene, camera);
-    }
-
-    animate();
-
-    // Responsive resize
-    window.addEventListener("resize", () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-</script>
-
+    <canvas id="canvas"></canvas>
+    <div class="controls">
+        <div class="control-group">
+            <label>Particles: <span id="particleCountValue">50</span></label>
+            <input type="range" id="particleCount" min="10" max="200" value="50">
+        </div>
+        <div class="control-group">
+            <label>Size: <span id="particleSizeValue">3</span></label>
+            <input type="range" id="particleSize" min="1" max="10" value="3">
+        </div>
+        <button id="resetBtn">Reset</button>
+    </div>
 </body>
 </html>
