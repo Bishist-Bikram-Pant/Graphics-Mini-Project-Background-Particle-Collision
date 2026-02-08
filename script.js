@@ -65,3 +65,38 @@ class Particle {
         ctx.shadowBlur = 0;
     }
 }
+
+// Particle system
+let particles = [];
+
+function initParticles() {
+    particles = [];
+    for (let i = 0; i < config.particleCount; i++) {
+        particles.push(new Particle());
+    }
+}
+
+
+// Draw connections between nearby particles
+function drawConnections() {
+    for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+            const p1 = particles[i];
+            const p2 = particles[j];
+
+            const dx = p2.x - p1.x;
+            const dy = p2.y - p1.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < config.connectionDistance) {
+                const opacity = (1 - distance / config.connectionDistance) * 0.5;
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(100, 200, 255, ${opacity})`;
+                ctx.lineWidth = 1;
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+            }
+        }
+    }
+}
