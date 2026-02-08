@@ -100,3 +100,61 @@ function drawConnections() {
         }
     }
 }
+'// Collision detection and response'
+function detectCollisions() {
+    for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+            const p1 = particles[i];
+            const p2 = particles[j];
+
+            const dx = p2.x - p1.x;
+            const dy = p2.y - p1.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            // Check for collision
+            if (distance < p1.radius + p2.radius) {
+                // Resolve collision using elastic collision physics
+                const angle = Math.atan2(dy, dx);
+                const sin = Math.sin(angle);
+                const cos = Math.cos(angle);
+
+                // Rotate particle positions
+                const pos1 = { x: 0, y: 0 };
+                const pos2 = rotate(dx, dy, sin, cos, true);
+
+                // Rotate velocities
+                const vel1 = rotate(p1.vx, p1.vy, sin, cos, true);
+                const vel2 = rotate(p2.vx, p2.vy, sin, cos, true);
+
+                // Collision reaction
+                const vxTotal = vel1.x - vel2.x;
+                vel1.x = ((p1.mass - p2.mass) * vel1.x + 2 * p2.mass * vel2.x) / (p1.mass + p2.mass);
+                vel2.x = vxTotal + vel1.x;
+
+                // Update positions to avoid overlap
+                const absV = Math.abs(vel1.x) + Math.abs(vel2.x);
+                const overlap = (p1.radius + p2.radius) - Math.abs(pos2.x);
+                pos1.x += vel1.x / absV * overlap;
+                pos2.x += vel2.x / absV * overlap;
+
+                // Rotate positions back
+                const pos1F = rotate(pos1.x, pos1.y, sin, cos, false);
+                const pos2F = rotate(pos2.x, pos2.y, sin, cos, false);
+
+                p2.x = p1.x + pos2F.x;
+                p2.y = p1.y + pos2F.y;
+                p1.x = p1.x + pos1F.x;
+                p1.y = p1.y + pos1F.y;
+
+                // Rotate velocities back
+                const vel1F = rotate(vel1.x, vel1.y, sin, cos, false);
+                const vel2F = rotate(vel2.x, vel2.y, sin, cos, false);
+
+                p1.vx = vel1F.x;
+                p1.vy = vel1F.y;
+                p2.vx = vel2F.x;
+                p2.vy = vel2F.y;
+            }
+        }
+    }
+}
