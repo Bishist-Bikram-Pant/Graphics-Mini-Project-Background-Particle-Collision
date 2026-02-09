@@ -3,7 +3,7 @@
 
 An interactive canvas-based particle system with collision detection and dynamic connections.
 
-## Screenshots
+## Screenshots of Project
 
 ![Screenshot 1](Screenshot%202026-02-09%20191305.png)
 
