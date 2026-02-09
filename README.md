@@ -3,6 +3,14 @@
 
 An interactive canvas-based particle system with collision detection and dynamic connections.
 
+## Screenshots
+
+![Screenshot 1](Screenshot%202026-02-09%20191305.png)
+
+![Screenshot 2](Screenshot%202026-02-09%20191430.png)
+
+![Screenshot 3](Screenshot%202026-02-09%20191454.png)
+
 ## Features
 
 - Particle collision physics
