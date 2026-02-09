@@ -76,31 +76,7 @@ function initParticles() {
     }
 }
 
-
-// Draw connections between nearby particles
-function drawConnections() {
-    for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-            const p1 = particles[i];
-            const p2 = particles[j];
-
-            const dx = p2.x - p1.x;
-            const dy = p2.y - p1.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-
-            if (distance < config.connectionDistance) {
-                const opacity = (1 - distance / config.connectionDistance) * 0.5;
-                ctx.beginPath();
-                ctx.strokeStyle = `rgba(100, 200, 255, ${opacity})`;
-                ctx.lineWidth = 1;
-                ctx.moveTo(p1.x, p1.y);
-                ctx.lineTo(p2.x, p2.y);
-                ctx.stroke();
-            }
-        }
-    }
-}
-'// Collision detection and response'
+// Collision detection and response
 function detectCollisions() {
     for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
@@ -158,3 +134,122 @@ function detectCollisions() {
         }
     }
 }
+
+function rotate(x, y, sin, cos, reverse) {
+    return {
+        x: (reverse) ? (x * cos + y * sin) : (x * cos - y * sin),
+        y: (reverse) ? (y * cos - x * sin) : (y * cos + x * sin)
+    };
+}
+
+// Draw connections between nearby particles
+function drawConnections() {
+    for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+            const p1 = particles[i];
+            const p2 = particles[j];
+
+            const dx = p2.x - p1.x;
+            const dy = p2.y - p1.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < config.connectionDistance) {
+                const opacity = (1 - distance / config.connectionDistance) * 0.5;
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(100, 200, 255, ${opacity})`;
+                ctx.lineWidth = 1;
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+            }
+        }
+    }
+}
+
+// Animation loop
+function animate() {
+    ctx.fillStyle = 'rgba(10, 10, 10, 0.1)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    drawConnections();
+    
+    particles.forEach(particle => {
+        particle.update();
+        particle.draw();
+    });
+
+    detectCollisions();
+
+    requestAnimationFrame(animate);
+}
+
+// Mouse interaction
+let mouse = {
+    x: undefined,
+    y: undefined,
+    radius: 100
+};
+
+canvas.addEventListener('mousemove', (e) => {
+    mouse.x = e.x;
+    mouse.y = e.y;
+
+    // Push particles away from mouse
+    particles.forEach(particle => {
+        const dx = particle.x - mouse.x;
+        const dy = particle.y - mouse.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < mouse.radius) {
+            const force = (mouse.radius - distance) / mouse.radius;
+            const angle = Math.atan2(dy, dx);
+            particle.vx += Math.cos(angle) * force * 0.5;
+            particle.vy += Math.sin(angle) * force * 0.5;
+        }
+    });
+});
+
+canvas.addEventListener('click', (e) => {
+    // Add new particle at click position
+    particles.push(new Particle(e.x, e.y));
+    if (particles.length > config.particleCount) {
+        particles.shift();
+    }
+});
+
+// Window resize
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    initParticles();
+});
+
+// Controls
+const particleCountSlider = document.getElementById('particleCount');
+const particleCountValue = document.getElementById('particleCountValue');
+const particleSizeSlider = document.getElementById('particleSize');
+const particleSizeValue = document.getElementById('particleSizeValue');
+const resetBtn = document.getElementById('resetBtn');
+
+particleCountSlider.addEventListener('input', (e) => {
+    config.particleCount = parseInt(e.target.value);
+    particleCountValue.textContent = config.particleCount;
+    initParticles();
+});
+
+particleSizeSlider.addEventListener('input', (e) => {
+    config.particleSize = parseInt(e.target.value);
+    particleSizeValue.textContent = config.particleSize;
+    particles.forEach(particle => {
+        particle.radius = config.particleSize;
+        particle.mass = particle.radius;
+    });
+});
+
+resetBtn.addEventListener('click', () => {
+    initParticles();
+});
+
+// Initialize and start
+initParticles();
+animate();
