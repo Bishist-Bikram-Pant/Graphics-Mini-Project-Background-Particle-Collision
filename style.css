@@ -29,3 +29,77 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.1);
     min-width: 180px;
 }
+
+.control-group {
+    margin-bottom: 10px;
+}
+
+.control-group label {
+    display: block;
+    margin-bottom: 3px;
+    font-size: 12px;
+    color: #999;
+}
+
+.control-group span {
+    color: #00d4ff;
+    font-weight: bold;
+}
+
+input[type="range"] {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.15);
+    outline: none;
+    border-radius: 2px;
+    -webkit-appearance: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    background: #00d4ff;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    background: #00d4ff;
+    cursor: pointer;
+    border-radius: 50%;
+    border: none;
+}
+
+button {
+    width: 100%;
+    padding: 6px;
+    background: rgba(100, 120, 200, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: white;
+    font-size: 11px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    margin-top: 5px;
+}
+
+button:hover {
+    background: rgba(100, 120, 200, 0.8);
+}
+
+button:active {
+    background: rgba(100, 120, 200, 1);
+}
+
+@media (max-width: 768px) {
+    .controls {
+        top: 10px;
+        right: 10px;
+        padding: 10px;
+        min-width: 160px;
+    }
+}
